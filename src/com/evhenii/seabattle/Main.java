@@ -13,7 +13,7 @@ class Main {
 		Game game = new Game() ;
 
 		do {
-
+			
 			game.process();
 		}
 		while( !game.is_game_over() );

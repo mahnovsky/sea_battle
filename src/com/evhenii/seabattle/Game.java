@@ -36,6 +36,13 @@ public class Game {
 
 	public void process() {
 
+		if( _state != GameState.Battle && 
+			_players[0].is_map_filled() && 
+			_players[1].is_map_filled() )
+		{
+			_state = GameState.Battle;
+		}
+		
 		_players[_current_index].process();
 
 		next_step();

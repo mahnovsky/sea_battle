@@ -11,11 +11,13 @@ public class Player extends BasePlayer implements InputListener {
 		_input = new Input( this );
 	}
 
-	public void make_ship(int x, int y, int decks, Orientation o) {
+	public boolean add_new_ship( DeckCount decks, Orientation orient, Point start_coord ) {
 
-		System.out.println( "make_ship x, y (" + x + ", " + y + ") " + decks );
+		System.out.println( "make_ship x, y (" + start_coord.x + ", " + start_coord.y + ") " + decks );
 
-		Ship.make( _map, DeckCount.value_of(decks), o, new Point( x, y ) );
+		add_ship( orient, decks, start_coord );
+		
+		return get_free_places(decks) > 0;
 	}
 
 	public void attack( int x, int y ) {
@@ -33,5 +35,10 @@ public class Player extends BasePlayer implements InputListener {
 		super.process();
 
 		_input.process( _game.get_state() );
+	}
+	
+	public void auto_fill() {
+	
+		_filler.fill();
 	}
 }

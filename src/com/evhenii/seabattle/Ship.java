@@ -32,6 +32,11 @@ public class Ship {
 			map.add_object( deck );
 		}
 	}
+	
+	public DeckCount get_deck_count() {
+		
+		return _deck_count;
+	}
 
 	public boolean is_valid() {
 
@@ -55,22 +60,9 @@ public class Ship {
 		return is_alive;
 	}
 
-	public static Ship make( Map map, DeckCount deck_count, Orientation orientation, Point start_coord ) {
+	public static Point[] get_coords_for_ship( Map map, DeckCount deck_count, Orientation orientation, Point start_coord ) {
 
-		Point step = null;
-
-		if( orientation == Orientation.Horizontal ) {
-
-			step = new Point( 1, 0 );
-		}
-		else if ( orientation == Orientation.Vertical ) {
-
-			step = new Point( 0, 1 );
-		}
-		else {
-
-			return null;
-		}
+		Point step = orientation.get_direction();
 
 		boolean is_posible_place = true;
 
@@ -95,7 +87,7 @@ public class Ship {
 
 		if( is_posible_place ) {
 
-			return new Ship( map, deck_count, orientation, coords );
+			return coords; //new Ship( map, deck_count, orientation, coords );
 		}
 
 		return null;		
