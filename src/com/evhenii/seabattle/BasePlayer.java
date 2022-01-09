@@ -117,4 +117,9 @@ public class BasePlayer {
 		
 		return _alive_ships;
 	}
+	
+	public Map get_map() {
+		
+		return _map;
+	}
 }

@@ -14,11 +14,12 @@ public class Map {
 
 	public static Logger log = Logger.getLogger( Map.class.getName() );
 
-	public final int With = 10;
-	public final int Height = 10;
+	public static final int With = 10;
+	public static final int Height = 10;
 
 	private char [] _head;
 	private char [][] _cells;
+	private char [][] _map_view;
 
 	private IMapObject[][] _objects;
 
@@ -27,15 +28,16 @@ public class Map {
 	public Map() {
 
 		_head = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
-		_cells = new char[With] [Height];
+		_cells = new char[Height][With];
+		_map_view = new char[Height + 1] [(With + 1) * 2];
 
-		_objects = new IMapObject[With][Height];
+		_objects = new IMapObject[Height][With];
 
 		for(  int y = 0; y < Height; ++y ) {
 
 			for( int x = 0; x < With; ++x ) {
 
-				_cells[x][y] = ' ';
+				_cells[y][x] = ' ';
 			}
 		}
 
@@ -56,7 +58,7 @@ public class Map {
 
 		if ( is_valid_coord( position ) ) {
 
-			_objects[position.x][position.y] = object;
+			_objects[position.y][position.x] = object;
 		}
 		else {
 
@@ -71,7 +73,7 @@ public class Map {
 
 	public boolean is_collide( Point position ) {
 
-		return _objects[position.x][position.y] != null;
+		return _objects[position.y][position.x] != null;
 	}
 
 	public boolean has_neighbours( Point position ) {
@@ -82,7 +84,7 @@ public class Map {
 
 			Point neighbour = new Point( position.x + p.x, position.y + p.y );
 
-			if( is_valid_coord( neighbour ) && _objects[neighbour.x][neighbour.y] != null ) {
+			if( is_valid_coord( neighbour ) && _objects[neighbour.y][neighbour.x] != null ) {
 
 				result = true;
 				break;
@@ -98,7 +100,7 @@ public class Map {
 
 			for( int x = 0; x < With; ++x ) {
 
-				_cells[x][y] = ' ';
+				_cells[y][x] = ' ';
 			}
 		}
 	}
@@ -111,13 +113,13 @@ public class Map {
 
 			for( int x = 0; x < With; ++x ) {
 
-				IMapObject object = _objects[x][y];
+				IMapObject object = _objects[y][x];
 
 				if( object != null ) {
 
 					Point position = object.get_position();
 
-					_cells[position.x][position.y] = object.get_view();
+					_cells[position.y][position.x] = object.get_view();
 				}
 			}
 		}
@@ -130,31 +132,51 @@ public class Map {
 		int coordX = 0;
 		int coordY = 1;
 
-		System.out.print( ' ' );
-		for( int x = 0; x < With; ++x ) {
+		//System.out.print( ' ' );
+		_map_view[0][0] = ' ';
+		_map_view[0][1] = ' ';
+		int width = (With + 1) * 2;
+		for( int x = 2; x < width; x += 2 ) {
 
-			System.out.print( ' ' );
-			System.out.print( _head [coordX] );
+			_map_view[0][x] = _head[coordX];
+			_map_view[0][x+1] = ' ';
 
 			coordX += 1;
 		}
-
-		System.out.println();
-
+		
 		for(  int y = 0; y < Height; ++y ) {
 
-			System.out.print( coordY++ );
-
+			String row_number = String.valueOf(coordY);
+			_map_view[coordY][0] = row_number.charAt(0);
+			
+			if( coordY > 9 ) {
+				_map_view[coordY][1] = row_number.charAt(1);
+			}
+			else {
+				_map_view[coordY][1] = ' ';
+			}
+			coordX = 2;
 			for( int x = 0; x < With; ++x ) {
 
-				if( !(x == 0 && coordY == 11) ) {
-					System.out.print( ' ' );
-				}
+				//if( !(x == 0 && coordY == 11) ) {
+					
+					
+				//}
 
-				System.out.print( _cells[x][y] );
+				_map_view[coordY][coordX++] = _cells[y][x];
+				_map_view[coordY][coordX++] = ' ';
 			}
-
-			System.out.println('|');
+			++coordY;
+			//System.out.println('|');
+		}
+		
+		for(int y = 0; y < (Height+1); ++y){
+			
+			for(int x = 0; x < width; ++x){
+			
+				System.out.print(_map_view[y][x]);
+			}
+			System.out.println();
 		}
 	}
 }
